@@ -1,0 +1,74 @@
+// Business Operations OS — Phase 0 schema
+// Identity + tenancy foundation. Every future module's tables will carry
+// organizationId and follow this same isolation pattern.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  users User[]
+  roles Role[]
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  passwordHash   String
+  name           String?
+  organizationId String
+  roleId         String
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  role         Role         @relation(fields: [roleId], references: [id])
+
+  @@index([organizationId])
+}
+
+// Roles are defined per-organization (not global) so each org can shape
+// its own role set later, while still sharing the same permission keys.
+model Role {
+  id             String   @id @default(cuid())
+  name           String // e.g. "owner", "manager", "sales", "inventory", "employee"
+  organizationId String
+  createdAt      DateTime @default(now())
+
+  organization Organization     @relation(fields: [organizationId], references: [id])
+  users        User[]
+  permissions  RolePermission[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+// Permissions are global keys ("customers:read", "orders:write") that any
+// org's roles can be granted. This keeps the permission vocabulary
+// consistent across tenants even though role assignment is per-org.
+model Permission {
+  id          String @id @default(cuid())
+  key         String @unique
+  description String?
+
+  roles RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+}
