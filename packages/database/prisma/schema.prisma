@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -- Identity & Access Management --
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+  accounts  Account[]
+}
+
+model User {
+  id             String       @id @default(uuid())
+  email          String       @unique
+  hashedPassword String
+  firstName      String
+  lastName       String
+  role           Role         @default(STANDARD_USER)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+enum Role {
+  ADMIN
+  OPERATIONS_MANAGER
+  AUDITOR
+  STANDARD_USER
+}
+
+// -- CRM & Sales --
+model Account {
+  id             String       @id @default(uuid())
+  name           String
+  industry       String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  contacts       Contact[]
+  deals          Deal[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Contact {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Deal {
+  id        String   @id @default(uuid())
+  name      String
+  amount    Float
+  stage     String
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// -- Inventory & Product --
+model Product {
+  id          String   @id @default(uuid())
+  skuCode     String   @unique
+  name        String
+  description String?
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
