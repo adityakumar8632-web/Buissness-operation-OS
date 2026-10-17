@@ -1,0 +1,22 @@
+{
+  "name": "@business-os/billing-invoicing",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext ts,tsx"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.21.4",
+    "@business-os/types": "workspace:*",
+    "@business-os/ui-kit": "workspace:*",
+    "@business-os/api-client": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
+}
