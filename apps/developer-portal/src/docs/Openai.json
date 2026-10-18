@@ -1,0 +1,39 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Business Operations OS API",
+    "version": "1.0.0",
+    "description": "Generated OpenAPI 3.0 specification mapping all public endpoints, parameters, and response schemas[cite: 3]."
+  },
+  "servers": [
+    {
+      "url": "https://api.businessos.com/v1"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/crm/leads": {
+      "get": {
+        "summary": "List Leads",
+        "responses": {
+          "200": {
+            "description": "A paginated list of leads."
+          }
+        }
+      }
+    }
+  }
+}
