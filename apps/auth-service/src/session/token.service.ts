@@ -9,11 +9,16 @@ export interface TokenPayload {
   userId: string;
   orgId: string;
   roles: string[];
+  type: 'access';
 }
 
 export class TokenService {
   static generateAccessToken(payload: TokenPayload): string {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
+    return jwt.sign(
+      { ...payload, type: 'access' },
+      JWT_SECRET,
+      { expiresIn: ACCESS_TOKEN_EXPIRY }
+    );
   }
 
   static generateRefreshToken(userId: string, deviceId: string): string {
@@ -21,13 +26,26 @@ export class TokenService {
   }
 
   static verifyToken(token: string): TokenPayload {
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
-      return decoded;
-    } catch (error) {
-      throw new Error('Invalid or expired token');
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    if (
+      typeof decoded !== 'object' ||
+      decoded === null ||
+      decoded.type !== 'access' ||
+      typeof decoded.userId !== 'string' ||
+      typeof decoded.orgId !== 'string' ||
+      !Array.isArray(decoded.roles) ||
+      !decoded.roles.every((role) => typeof role === 'string')
+    ) {
+      throw new Error('Invalid access token payload');
     }
+
+    return decoded as TokenPayload;
+  } catch {
+    throw new Error('Invalid or expired access token');
   }
+}
 
   static decodeToken(token: string): any {
     return jwt.decode(token);
