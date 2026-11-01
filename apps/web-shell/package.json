@@ -15,7 +15,9 @@
     "@business-os/tokens": "workspace:*",
     "@business-os/types": "workspace:*",
     "@business-os/ui-kit": "workspace:*",
-    "@business-os/api-client": "workspace:*"
+    "@business-os/api-client": "workspace:*",
+    "@business-os/crm": "workspace:*",
+    "@business-os/inventory": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
