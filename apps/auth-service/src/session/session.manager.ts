@@ -18,6 +18,7 @@ export class SessionManager {
       userId: data.userId,
       orgId: data.orgId,
       roles: data.roles,
+      type: 'access',
     };
 
     const accessToken = TokenService.generateAccessToken(payload);

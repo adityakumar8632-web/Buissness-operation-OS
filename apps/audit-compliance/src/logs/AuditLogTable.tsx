@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { DataTable } from '@workspace/ui-kit/table';
-import { AsyncLoader } from '@workspace/ui-kit/states';
-import { apiClient } from '@workspace/api-client';
+import { DataTable, AsyncLoader } from '@business-os/ui-kit';
+import { apiClient } from '@business-os/api-client';
+
+interface AuditLog {
+  id: string;
+  timestamp: string | Date;
+  actorId: string;
+  action: string;
+  resource: string;
+  resourceId: string;
+  ipAddress: string;
+}
 
 export const AuditLogTable: React.FC = () => {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState<AuditLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await apiClient.get('/api/audit/logs?limit=50');
+        const response = await apiClient.get<{ data: AuditLog[] }>('/api/audit/logs?limit=50');
         setLogs(response.data);
       } catch (error) {
         console.error('Failed to fetch audit logs', error);
@@ -18,17 +27,17 @@ export const AuditLogTable: React.FC = () => {
         setIsLoading(false);
       }
     };
-    fetchLogs();
+    void fetchLogs();
   }, []);
 
-  if (isLoading) return <AsyncLoader text="Loading audit logs..." />;
+  if (isLoading) return <AsyncLoader message="Loading audit logs..." />;
 
   const columns = [
-    { header: 'Timestamp', accessor: (row: any) => new Date(row.timestamp).toLocaleString() },
-    { header: 'Actor (User)', accessor: 'actorId' },
-    { header: 'Action', accessor: 'action' },
-    { header: 'Resource', accessor: (row: any) => `${row.resource} (${row.resourceId})` },
-    { header: 'IP Address', accessor: 'ipAddress' }, // Filterable table showing who did what, when, and from which IP address[cite: 3].
+    { key: 'timestamp', header: 'Timestamp', render: (row: AuditLog) => new Date(row.timestamp).toLocaleString() },
+    { key: 'actorId', header: 'Actor (User)' },
+    { key: 'action', header: 'Action' },
+    { key: 'resource', header: 'Resource', render: (row: AuditLog) => `${row.resource} (${row.resourceId})` },
+    { key: 'ipAddress', header: 'IP Address' },
   ];
 
   return (

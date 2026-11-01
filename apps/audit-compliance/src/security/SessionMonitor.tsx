@@ -1,41 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import { DataTable } from '@workspace/ui-kit/table';
-import { Button } from '@workspace/ui-kit/button';
-import { apiClient } from '@workspace/api-client';
+import { DataTable, Button } from '@business-os/ui-kit';
+import { apiClient } from '@business-os/api-client';
+
+interface ActiveSession {
+  id: string;
+  userId: string;
+  ipAddress: string;
+  userAgent: string;
+  createdAt: string | Date;
+}
 
 export const SessionMonitor: React.FC = () => {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState<ActiveSession[]>([]);
 
   useEffect(() => {
     const fetchSessions = async () => {
-      const response = await apiClient.get('/api/security/sessions/active');
-      setSessions(response.data);
+      try {
+        const response = await apiClient.get<{ data: ActiveSession[] }>('/api/security/sessions/active');
+        setSessions(response.data);
+      } catch (error) {
+        console.error('Failed to fetch active sessions', error);
+      }
     };
-    fetchSessions();
+    void fetchSessions();
   }, []);
 
   const revokeSession = async (sessionId: string) => {
-    await apiClient.post(`/api/security/sessions/${sessionId}/revoke`);
-    setSessions(prev => prev.filter((s: any) => s.id !== sessionId));
+    await apiClient.post<void>(`/api/security/sessions/${sessionId}/revoke`, undefined);
+    setSessions(prev => prev.filter(session => session.id !== sessionId));
   };
 
   const columns = [
-    { header: 'User ID', accessor: 'userId' },
-    { header: 'IP Address', accessor: 'ipAddress' },
-    { header: 'Device / Agent', accessor: 'userAgent' },
-    { header: 'Started At', accessor: (row: any) => new Date(row.createdAt).toLocaleString() },
-    { 
-      header: 'Actions', 
-      accessor: (row: any) => (
-        <Button variant="outline" size="sm" onClick={() => revokeSession(row.id)}>Revoke</Button>
-      ) 
+    { key: 'userId', header: 'User ID' },
+    { key: 'ipAddress', header: 'IP Address' },
+    { key: 'userAgent', header: 'Device / Agent' },
+    { key: 'createdAt', header: 'Started At', render: (row: ActiveSession) => new Date(row.createdAt).toLocaleString() },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (row: ActiveSession) => (
+        <Button variant="outline" size="sm" onClick={() => void revokeSession(row.id)}>Revoke</Button>
+      ),
     },
   ];
 
   return (
     <div className="session-monitor p-6 bg-white rounded shadow-sm border">
       <h2 className="text-xl font-bold mb-4">Active Sessions</h2>
-      {/* Administrative UI displaying currently active login sessions across all users[cite: 3]. */}
       <DataTable data={sessions} columns={columns} />
     </div>
   );
