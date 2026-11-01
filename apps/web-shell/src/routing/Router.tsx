@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { routes } from './routes.config';
-import { RouteGuard } from './RouteGuard';
+import { routes } from './router.config';
+import { RouteGuard } from './RouterGuard';
 
 export function Router() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
