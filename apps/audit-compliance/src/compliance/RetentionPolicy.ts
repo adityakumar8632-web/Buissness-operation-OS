@@ -1,4 +1,4 @@
-import { db } from '@workspace/database';
+import { prisma as db } from '@business-os/database';
 
 export class RetentionPolicy {
   /**
