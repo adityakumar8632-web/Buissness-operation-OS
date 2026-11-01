@@ -1,5 +1,4 @@
-import { db } from '@workspace/database';
-import { ApplicationError } from '@workspace/api-client/errors';
+import { prisma as db } from '@business-os/database';
 
 export class AnomalyDetector {
   /**
