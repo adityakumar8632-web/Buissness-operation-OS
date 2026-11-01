@@ -1,5 +1,5 @@
 {
-  "name": "@business-os/developer-portal",
+  "name": "@workspace/developer-portal",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,10 +8,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@business-os/api-client": "workspace:*",
-    "@business-os/database": "workspace:*",
-    "@business-os/types": "workspace:*",
-    "@business-os/ui-kit": "workspace:*",
+    "@workspace/api-client": "workspace:*",
+    "@workspace/database": "workspace:*",
+    "@workspace/types": "workspace:*",
+    "@workspace/ui-kit": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "crypto-js": "^4.1.1",
@@ -22,6 +22,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@types/swagger-ui-react": "^4.18.0",
+    "eslint-config-custom": "workspace:*",
     "typescript": "^5.0.0"
   }
 }
