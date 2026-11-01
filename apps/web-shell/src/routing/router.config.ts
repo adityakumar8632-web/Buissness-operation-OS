@@ -7,10 +7,12 @@ export interface RouteConfig {
   exact?: boolean;
 }
 
-// Simulating lazy-loaded modules for the showcase monolith
-const DashboardView = lazy(() => Promise.resolve({ default: () => <div>Dashboard Module Placeholder</div> }));
-const CRMView = lazy(() => Promise.resolve({ default: () => <div>CRM Module Placeholder</div> }));
-const InventoryView = lazy(() => Promise.resolve({ default: () => <div>Inventory Module Placeholder</div> }));
+const DashboardView = lazy(() =>
+  Promise.resolve({ default: () => <div>Dashboard Module Placeholder</div> })
+);
+
+const CRMView = lazy(() => import('../modules/CRMModule'));
+const InventoryView = lazy(() => import('../modules/InventoryModule'));
 
 export const routes: RouteConfig[] = [
   {
@@ -27,5 +29,5 @@ export const routes: RouteConfig[] = [
     path: '/inventory',
     component: InventoryView,
     requiredRoles: ['Operations', 'Admin'],
-  }
+  },
 ];
