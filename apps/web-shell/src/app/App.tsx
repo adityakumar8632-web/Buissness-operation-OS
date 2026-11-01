@@ -1,5 +1,5 @@
 import React from 'react';
-import { Providers } from './providers';
+import { Providers } from './Providers';
 import { AppShell } from '../layouts/AppShell';
 import { Router } from '../routing/Router';
 

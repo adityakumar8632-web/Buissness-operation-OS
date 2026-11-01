@@ -1,5 +1,5 @@
 {
-  "name": "@business-os/analytics-bi",
+  "name": "@workspace/analytics-bi",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,10 +8,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@business-os/api-client": "workspace:*",
-    "@business-os/database": "workspace:*",
-    "@business-os/types": "workspace:*",
-    "@business-os/ui-kit": "workspace:*",
+    "@workspace/api-client": "workspace:*",
+    "@workspace/database": "workspace:*",
+    "@workspace/types": "workspace:*",
+    "@workspace/ui-kit": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recharts": "^2.12.0"
@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "eslint-config-custom": "workspace:*",
     "typescript": "^5.0.0"
   }
 }
